@@ -1,0 +1,67 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
+
+<!--
+Scaffold-DbContext "Server=LAPTOP-BS7JUEF6; Database=DBernalProgramacionNCapas; Trusted_Connection=True; User=sa; Password=pass@word1; TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -Project "DL" -force
+Scaffold-DbContext "Server=DESKTOP-0FGOK40\SQLEXPRESS; Database=DBernalProgramacionNCapas; Trusted_Connection=True; User=sa; Password=123; TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -Project "DL" -force
+
+   ********* Usuario *********
+	
+    // Agregados
+    public string RolNombre { get; set; }
+    public int IdDireccion { get; set; }
+    public string Calle { get; set; }
+    public string NumeroInterior { get; set; }
+    public string NumeroExterior { get; set; }
+
+    public int IdColonia { get; set; }
+    public string ColoniaNombre { get; set; }
+    public string CodigoPostal { get; set; }
+
+    public int IdMunicipio { get; set; }
+    public string MunicipioNombre { get; set; }
+
+    public int IdEstado { get; set; }
+    public string EstadoNombre { get; set; }
+
+    public int IdPais { get; set; }
+    public string PaisNombre { get; set; }
+
+
+    ********* Aseguradora *********
+	
+	// Agregadas
+    public string NombreUsuario { get; set; }
+    public string ApellidoPaterno { get; set; }
+    public string ApellidoMaterno { get; set; }
+	
+	********* Empleado *********
+	
+	// Agregadas
+    public string EmpresaNombre { get; set; }
+    public string EmpresaTelefono { get; set; }
+    public string EmpresaEmail { get; set; }
+    public string DireccionWeb { get; set; }
+    public string? Logo { get; set; }
+	
+	********* Dependiente *********
+	// Agregadas
+    public string DependienteTipoNombre { get; set; }
+    public string EstadoCivilNombre { get; set; }
+-->

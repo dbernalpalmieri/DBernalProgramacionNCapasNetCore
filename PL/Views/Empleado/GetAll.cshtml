@@ -1,0 +1,152 @@
+﻿@model ML.Empleado
+@{
+    ViewData["Title"] = "GetAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" />
+
+<div class="container">
+    <h1>@ViewBag.Title</h1>
+
+    <div class="col-md-offset-2 col-md-10">
+        <button onclick="location.href = '@Url.Action("Form","Empleado")';" class="btn btn-primary">
+            <i class="bi bi-file-lock2"> Nuevo Empleado</i>
+        </button>
+    </div>
+
+    <div class="row mt-3" id="example">
+        <div class="col-sm-12">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>@ViewBag.Message</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive p-4">
+        <table class="table-striped" id="table_empleados" style="width:100%">
+            <thead>
+                <tr>
+                    @*<th>
+                    @Html.DisplayNameFor(model => model.IdUsuario)
+                    </th>*@
+                    <th>
+                        Nombre Completo
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Rfc)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Email)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Telefono)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FechaNacimiento)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Nss)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FechaIngreso)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Foto)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Empresa.Nombre)
+                    </th>
+
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @*var item Model*@
+                @foreach (ML.Empleado item in Model.Empleados)
+                {
+                    <tr>
+                        @*<td>
+                    @Html.DisplayFor(modelItem => item.IdUsuario)
+                    </td>*@
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NombreCompleto)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Rfc)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Telefono)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FechaNacimiento)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nss)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FechaIngreso)
+                        </td>
+                        <td>
+                            @if (item.Foto == null)
+                            {
+                                <img src="~/image/personPhotoDefault.svg" class="rounded img-thumbnail" alt='Category Image' height='200px' width='200px'>
+                            }
+                            else
+                            {
+                                //var imagenBase64 = Convert.ToBase64String(item.Imagen);
+                                var imagenSRC = $"data:image;base64,{item.Foto}";
+                                <img src='@imagenSRC' class="rounded img-thumbnail" alt='Category Image' height='200px' width='200px'>
+
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Empresa.Nombre)
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <button onclick="location.href = '@Url.Action("Form","Empleado", new { NumeroEmpleado = item.NumeroEmpleado })';"
+                                    class="btn btn-warning me-2" title="Editar">
+                                    <i class="bi bi-pen"></i>
+                                </button>
+                                <a class="btn btn-danger bi bi-trash-fill" href="@Url.Action("Delete", "Empleado", new { NumeroEmpleado = item.NumeroEmpleado })"
+                               onclick="return confirm('¿Estas seguro que deseas eliminar este registro?');"></a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#table_empleados').DataTable({
+                "lengthMenu": [[5, 10, 15, 20, -1], [5, 10, 15, 20, "All"]],
+                searching: true,
+                autoWidth: false,
+                columnDefs: [
+                    {
+                        targets: ['_all'],
+                        className: 'mdc-data-table__cell',
+                    },
+                ],
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json",
+                },
+
+            });
+        });
+    </script>
+}

@@ -1,0 +1,108 @@
+﻿@model ML.Dependiente
+@{
+    ViewData["Title"] = "GetAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h1>@ViewBag.Title</h1>
+
+    <div class="col-md-offset-2 col-md-10">
+        <button onclick="location.href = '@Url.Action("Form","EmpleadoDependiente")';" class="btn btn-primary">
+            <i class="bi bi-file-lock2"> Agregar Dependiente</i>
+        </button>
+    </div>
+
+    <div class="row mt-3" id="example">
+        <div class="col-sm-12">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>@ViewBag.Message</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+    <p class="h3">Empleado: @Model.Empleado.NombreCompleto</p>
+    <div class="table-responsive p-4">
+        <table class="table-striped" id="table_usuarios" style="width:100%">
+            <thead>
+                <tr>
+                    @*<th>
+                    @Html.DisplayNameFor(model => model.IdUsuario)
+                    </th>*@
+                    <th>
+                        Nombre Completo
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Rfc)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FechaNacimiento)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EstadoCivil.Nombre)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Genero)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Telefono)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DependienteTipo.Nombre)
+                    </th>
+
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @*var item Model*@
+                @foreach (ML.Dependiente item in Model.Dependientes)
+                {
+                    <tr>
+                        @*<td>
+                    @Html.DisplayFor(modelItem => item.IdUsuario)
+                    </td>*@
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NombreCompleto)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Rfc)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FechaNacimiento)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EstadoCivil.Nombre)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Genero)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Telefono)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Rfc)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DependienteTipo.Nombre)
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <button onclick="location.href = '@Url.Action("Form","EmpleadoDependiente", new { IdDependiente = item.IdDependiente })';"
+                                    class="btn btn-warning me-2" title="Editar">
+                                    <i class="bi bi-pen"></i>
+                                </button>
+                                <a class="btn btn-danger bi bi-trash-fill" href="@Url.Action("Delete", "EmpleadoDependiente", new { IdDependiente = item.IdDependiente })"
+                               onclick="return confirm('¿Estas seguro que deseas eliminar este registro?');"></a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+

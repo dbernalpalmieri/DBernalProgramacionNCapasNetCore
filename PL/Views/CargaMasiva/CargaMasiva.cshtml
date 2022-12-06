@@ -1,0 +1,232 @@
+﻿@model ML.Result
+@{
+    ViewData["Title"] = "Carga Masiva";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h1>@ViewBag.Title</h1>
+    @if (ViewBag.Message != null)
+    {
+        <div class="row mt-3">
+            <div class="col-sm-12">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>@ViewBag.Message</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="col-lg-12">
+        @using (Html.BeginForm("CargaTXT", "CargaMasiva", FormMethod.Post, new { enctype = "multipart/form-data", id = "form_upload" }))
+        {
+            <div class="form">
+                <div class="d-flex mt-3 mb-3 row justify-content-center">
+                    <div class="col-md-5 mb-2">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-warning" type="button" id="btn_txt">Block de Notas .txt</button>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-success" type="button" id="btn_xlsx">Execel .xls</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex mt-3 mb-4 row">
+                    <div class="col-md-6 d-flex justify-content-end">
+                        <div class="col-md-10" id="inputTXT" style="display: none;">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1"><i class="bi bi-filetype-txt"></i></span>
+                                </div>
+                                <input class="form-control form-control-m" type="file" accept=".txt" , id="inputFiletxt" name="txt_file" onchange="readFile(this)">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="col-md-10" id="inputXLS" style="display: none;">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1"><i class="bi bi-filetype-xlsx"></i></span>
+                                </div>
+                                <input class="form-control form-control-m" type="file" accept=".xlsx" , id="inputFilexlsx" name="xls_file" onchange="readFile(this)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex mb-4 justify-content-center">
+                    <div class="col-md-4">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary" id="btnUploadtxt" style="display: none;">
+                                <i class="bi bi-filetype-txt text-warning" type="submit"></i> Subir Archivo
+                            </button>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary" id="btnUploadxlsx" style="display: none;">
+                                <i class="bi bi-filetype-xlsx text-success" type="submit"></i> Subir Archivo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (Model != null && !Model.Correct)
+        {
+            <div class="col-sm-12 mt-4">
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>@Model.Message</strong>
+                    @Html.ActionLink(" Descargar detalles", "DownloadErrorFile", "CargaMasiva", new { JSONresult =  Json.Serialize(Model) })
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        }
+        <div class="row justify-content-center">
+            <div class="col-md-8 ">
+                @if (Model != null && Model.Objects != null && Model.Correct)
+                {
+                    @if (Model.Objects.Count > 0)
+                    {
+                        <table class="table table-bordered table-responsive table-dark">
+                            <thead>
+                                <tr class="text-center">
+                                    <th style="white-space:nowrap">N° Registro</th>
+                                    <th style="white-space:nowrap">Error (Completar la información o adaptarla al tipo de dato.)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (ML.ErrorExcel error in Model.Objects)
+                                {
+                                    <tr class="text-center">
+                                        <td>
+                                            @error.IdRegistro</td>
+                                        <td>
+                                            @Html.DisplayFor(errorItem => error.Mensaje)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        @using (Html.BeginForm("CargaXLSX", "CargaMasiva", FormMethod.Post))
+                        {
+                            <div class="row g-3 justify-content-center">
+                                <div class="d-grid gap-2 col-md-6">
+                                    <button class="btn btn-outline-primary">
+                                        <i class="bi bi-filetype-xlsx text-success" type="submit"></i> Cargar Archivo
+                                    </button>
+                                </div>
+                            </div>
+                        }
+
+                    }
+                }
+            </div>
+
+        </div>
+        @*<div class="col-sm-12 mt-4">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Todos los registros del fichero Excel están en optimas condiciones. </strong>
+        <button type="button" class="btn btn-primary btn-circle">
+        <i class="bi bi-cloud-upload-fill"></i> Continuar
+        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        </div>
+        <div class="col-sm-12 mt-4">
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Hubo un total de X errores en el ficehro excel.</strong>
+        <button type="button" class="btn btn-primary btn-circle">
+        <i class="bi bi-cloud-upload-fill"></i> Continuar
+        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        </div>*@
+
+
+    </div>
+
+</div>
+
+</div>
+@section Scripts{
+
+
+    <script type="text/javascript">
+        $(function () {
+            $("#btnUploadtxt").click(function () {
+                $("#form_upload").attr
+                    (
+                        "action",
+                        "@Url.Action("CargaTXT", "CargaMasiva")",
+                    ).submit();
+            });
+            $("#btnUploadxlsx").click(function () {
+                $("#form_upload").attr
+                    (
+                        "action",
+                        "@Url.Action("CargaXLSX", "CargaMasiva")",
+                    ).submit();
+            });
+        });
+
+        $(document).ready(function () {
+            $("#btn_txt").click(function () {
+                if ($("#inputXLS:visible") || $("#btnUploadxlsx:visible")) {
+                    $("#inputXLS").hide("explode");
+                    $("#btnUploadxlsx").hide("explode");
+                }
+                $("#inputTXT").toggle("fold");
+                $("#btnUploadtxt").toggle("fold");
+            });
+
+            $("#btn_xlsx").click(function () {
+                if ($("#inputTXT:visible") || $("#btnUploadtxt:visible")) {
+                    $("#inputTXT").hide("explode");
+                    $("#btnUploadtxt").hide("explode");
+                }
+                $("#inputXLS").toggle("fold");
+                $("#btnUploadxlsx").toggle("fold");
+            });
+        });
+
+        $('#inputFiletxt').change(function () {
+            var ext = this.value.match(/\.(.+)$/)[1];
+            switch (ext) {
+                case 'txt':
+                    break;
+                default:
+                    $('#inputFiletxt').val(null);
+                    alert('This is not an allowed file type. \nOnly .txt files are allowed!.');
+            }
+        });
+        $('#inputFilexlsx').change(function () {
+            var ext = this.value.match(/\.(.+)$/)[1];
+            switch (ext) {
+                case 'xlsx':
+                    break;
+                default:
+                    $('#inputFilexlsx').val(null);
+                    alert('This is not an allowed file type. \nOnly .xlsx files are allowed!.');
+            }
+        });
+
+                                                                    //function readFile(file) {
+                                                                    //    var fileName = file.value;
+                                                                    //    var idxDot = fileName.lastIndexOf(".") + 1;
+                                                                    //    var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+
+                                                                    //    if (extFile == "txt" || extFile == "xlsx") {
+
+                                                                    //    } else {
+                                                                    //        alert("This is not an allowed file type. \nOnly .txt or .xlsx files are allowed!.");
+                                                                    //        $('#inputFiletxt').val(null);
+                                                                    //        $('#inputFilexlsx').val(null);
+                                                                    //    }
+                                                                    //}
+    </script>
+}
+

@@ -1,0 +1,258 @@
+﻿@model ML.Dependiente
+
+@{
+    ViewData["Title"] = "Form";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h1>@ViewBag.Title</h1>
+
+    @if (ViewBag.Message != null)
+    {
+        <div class="row mt-3">
+            <div class="col-sm-12">
+                <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                    <strong>@ViewBag.Message</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="col-lg-12">
+        @using (Html.BeginForm("Form", "Empleado", FormMethod.Post, new { enctype = "multipart/form-data", id = "form_usuario" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="col-md-3">
+                @Html.HiddenFor(model => model.IdDependiente)
+            </div>
+            <div class="col-md-3">
+                @Html.HiddenFor(model => model.Empleado.NumeroEmpleado)
+            </div>
+
+            <div class="form">
+                <div class="form-group mt-3">
+                    <p class="fs-4">Datos Personales</p>
+                </div>
+                <div class="form-group d-flex mt-3 row justify-content-between">
+
+                    <div class="col-md-3">
+                        @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="input-group">
+                            <span class="input-group-text" id="basic-addon1"><i class="bi bi-fonts"></i></span>
+                            @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", placeholder="Ej. John David", id="inputTXT_Nombre", @onkeydown="return validateText(event,'alert_Nombre')", @onblur="return validateIsFull(this,'alert_Nombre')"}})
+                            @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                        </div>
+                        <div id="alert_Nombre" class="text-danger"></div>
+                    </div>
+
+                    <div class="col-md-3">
+                        @Html.LabelFor(model => model.ApellidoPaterno, "Apellido Paterno", htmlAttributes: new { @class = "control-label" })
+                        <div class="input-group">
+                            <span class="input-group-text" id="basic-addon1"><i class="bi bi-fonts"></i></span>
+                            @Html.EditorFor(model => model.ApellidoPaterno, new { htmlAttributes = new { @class = "form-control", placeholder="Ej. Shortland",  id="inputTXT_ApellidoPaterno", onkeydown="return validateText(event,'alert_ApellidoPaterno')", @onblur="return validateIsFull(this,'alert_ApellidoPaterno')"} })
+                            @Html.ValidationMessageFor(model => model.ApellidoPaterno, "", new { @class = "text-danger" })
+                        </div>
+                        <div id="alert_ApellidoPaterno" class="text-danger"></div>
+                    </div>
+
+                    <div class="col-md-3">
+                        @Html.LabelFor(model => model.ApellidoMaterno, "Apellido Materno", htmlAttributes: new { @class = "control-label" })
+                        <div class="input-group">
+                            <span class="input-group-text" id="basic-addon1"><i class="bi bi-fonts"></i></span>
+                            @Html.EditorFor(model => model.ApellidoMaterno, new { htmlAttributes = new { @class = "form-control", placeholder="Ej. Choppin", id="inputTXT_ApellidoMaterno", onkeydown="return validateText(event,'alert_ApellidoMaterno')", @onblur="return validateIsFull(this,'alert_ApellidoMaterno')" } })
+                            @Html.ValidationMessageFor(model => model.ApellidoMaterno, "",new { @class = "text-danger" })
+                        </div>
+                        <div id="alert_ApellidoMaterno" class="text-danger"></div>
+                    </div>
+
+                    <div class="col-md-3">
+                        @Html.LabelFor(model => model.Genero, htmlAttributes: new { @class = "control-label col-md-2" })
+
+                        @if (Model.Genero == null || Model.Genero == '\0')
+                        {
+                            <div class="form-check">
+                                @Html.RadioButtonFor(model => model.Genero,'M',new  { @class="form-check-input", id="sexo_Masculino"} )
+                                <label class="form-check-label" for="flexRadioDefault1">Hombre</label>
+                            </div>
+                            <div class="form-check">
+                                @Html.RadioButtonFor(model => model.Genero,'F',new { @class="form-check-input",  id="sexo_Femenino"}  )
+                                <label class="form-check-label" for="flexRadioDefault1">Mujer</label>
+                            </div>
+                        }
+                        else if (Model.Genero == 'M')
+                        {
+                            <div class="form-check">
+                                @Html.RadioButtonFor(model => model.Genero,'M',new  { @class="form-check-input",  @checked = "checked",  id="sexo_Masculino" } )
+                                <label class="form-check-label" for="flexRadioDefault1">Hombre</label>
+                            </div>
+                            <div class="form-check">
+                                @Html.RadioButtonFor(model => model.Genero,'F',new { @class="form-check-input",   id="sexo_Femenino"}  )
+                                <label class="form-check-label" for="flexRadioDefault1">Mujer</label>
+                            </div>
+                        }
+                        else if (Model.Genero == 'F')
+                        {
+                            <div class="form-check">
+                                @Html.RadioButtonFor(model => model.Genero,'M',new  { @class="form-check-input", id="sexo_Masculino" } )
+                                <label class="form-check-label" for="flexRadioDefault1">Hombre</label>
+                            </div>
+                            <div class="form-check">
+                                @Html.RadioButtonFor(model => model.Genero,'F',new { @class="form-check-input",  @checked = "checked", id="sexo_Femenino"}  )
+                                <label class="form-check-label" for="flexRadioDefault1">Mujer</label>
+                            </div>
+                        }
+                        <div id="alert_Sexo" class="text-secondary"></div>
+                        @Html.ValidationMessageFor(model => model.Genero, null, new { @class = "text-danger" })
+                    </div>
+
+
+                </div>
+
+                <div class="form-group d-flex mt-1 row justify-content-between">
+                    <div class="col-md-3">
+                        @Html.LabelFor(model => model.FechaNacimiento, "Fecha Nacimiento", htmlAttributes: new { @class = "control-label " })
+                        <div class="col-md-10 input-group">
+                            <span class="input-group-text" id="basic-addon1"><i class="bi bi-calendar-fill"></i></span>
+                            @Html.EditorFor(model => model.FechaNacimiento, new { htmlAttributes = new { @class = "form-control", @id="usuario_FechaNacimiento", placeholder="Ej. dd/mm/yyyy"}})
+                            @Html.ValidationMessageFor(model => model.FechaNacimiento, null, new { @class = "text-danger" })
+                        </div>
+                        <div id="alert_FechaNacimiento" class="text-danger"></div>
+                    </div>
+                    <div class="col-md-3">
+                        @Html.LabelFor(model => model.Rfc, "RFC", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="input-group">
+                            <span class="input-group-text" id="basic-addon1"><i class="bi bi-postcard"></i></span>
+                            @Html.EditorFor(model => model.Rfc, new { htmlAttributes = new { @class = "form-control", id="inputTXT_Curp", placeholder="Ej. "} })
+                            @Html.ValidationMessageFor(model => model.Rfc, "", new { @class = "text-danger" })
+                        </div>
+                        <div id="alert_Curp" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.EstadoCivil.IdEstadoCivil, "Estado Civil", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10 input-group">
+                            <span class="input-group-text" id="basic-addon1"><i class="bi bi-ui-radios-grid"></i></span>
+                            @Html.DropDownListFor(model => model.EstadoCivil.IdEstadoCivil, new SelectList(Model.EstadoCivil.EstadosCiviles, "IdEstadoCivil", "Nombre"), "Selecciona un Estado Civil", new  { @id = "idDependienteTipo", @class = "form-select" })
+                            @Html.ValidationMessageFor(model => model.EstadoCivil.IdEstadoCivil, null, new { @class = "text-danger" })
+                        </div>
+                        <div id="alert_IdEmpresa" class="text-danger"></div>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        @Html.LabelFor(model => model.Telefono, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10 input-group">
+                            <span class="input-group-text" id="basic-addon1"><i class="bi bi-telephone-fill"></i></span>
+                            @Html.EditorFor(model => model.Telefono, new { htmlAttributes = new { @class = "form-control", placeholder="Ej. +XX XXXX XXXX",  id="inputTXT_Telefono" /*onkeydown="return validatePhoneNumber(event,'alert_Telefono')", @onblur="return validateIsFull(this,'alert_Telefono')" */ } })
+                            @Html.ValidationMessageFor(model => model.Telefono, "", new { @class = "text-danger" })
+                        </div>
+                        <div id="alert_Telefono" class="text-danger"></div>
+                    </div>
+
+                </div>
+
+                <div class="d-flex mt-2 row">
+
+                    <div class="col-md-8">
+
+
+                        <div class="d-flex flex-column pe-2">
+
+
+
+                            <div class="form-group col-md-6 mt-2">
+                                @Html.LabelFor(model => model.DependienteTipo.IdDependienteTipo, "Tipo de Dependiente", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10 input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="bi bi-ui-radios-grid"></i></span>
+                                    @Html.DropDownListFor(model => model.DependienteTipo.IdDependienteTipo, new SelectList(Model.DependienteTipo.DependienteTipos, "IdDependienteTipo", "Nombre"), "Selecciona el tipo de dependiente", new  { @id = "idDependienteTipo", @class = "form-select" })
+                                    @Html.ValidationMessageFor(model => model.DependienteTipo.IdDependienteTipo, null, new { @class = "text-danger" })
+                                </div>
+                                <div id="alert_IdEmpresa" class="text-danger"></div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="col-md-4">
+                    </div>
+                    <div class="d-flex mt-5  justify-content-center">
+                        <div class="me-3">
+                            <a class="btn btn-danger bi bi-arrow-left-square-fill" href="@Url.Action("GetAllDependienteById", "EmpleadoDependiente",  new { NumeroEmpleado = Model.Empleado.NumeroEmpleado })" onclick="return confirm('¿No se guardaran los cambios, quieres continuar?')"> Regresar</a>
+
+                        </div>
+                        <div class="">
+                            <button class="btn btn-success" id="saveInfo">
+                                <i class="bi bi-check-square-fill" type="submit"> Guardar</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+@section Scripts{
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+    <script type="text/javascript">
+        // Email Validación
+        $('#inputTXT_Email, #inputTXT_EmailConfirm').on('blur keyup', function () {
+            var regex = /^[a-zA-Z0-9._]+[a-zA-Z0-9]+@@[a-zA-Z0-9]+\.[a-zA-Z]{2,4}$/;
+
+            var value1 = $('#inputTXT_EmailConfirm').val();
+            if (regex.test(this.value) && $('#inputTXT_Email').val() == $('#inputTXT_EmailConfirm').val()) {
+                $('#alert_Email').html('');
+                $('#alert_EmailConfirm').html('Las correos coinciden').attr('class', 'text-success');
+            }
+            else if (regex.test(this.value)) {
+                $('#alert_Email').html('');
+                $('#alert_EmailConfirm').html('Los correos no coinciden').attr('class', 'text-danger');
+            }
+            else if (regex.test($('#inputTXT_Email').val()) && !regex.test(value1)) {
+                $('#alert_Email').html('');
+                $('#alert_EmailConfirm').html('El correo es inválido').attr('class', 'text-danger');
+            }
+            else {
+                $('#alert_Email').html('El correo es inválido');
+                $('#alert_EmailConfirm').html('Los correos no coinciden').attr('class', 'text-danger');
+            }
+        });
+
+
+        function readImage(imagen) {
+            var fileName = imagen.value;
+            var idxDot = fileName.lastIndexOf(".") + 1;
+            var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+
+            if (extFile == "jpg" || extFile == "jpeg" || extFile == "png") {
+
+                if (imagen.files && imagen.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = (e) => {
+                        $("#imageView").attr("src", e.target.result);
+                    };
+                    reader.readAsDataURL(imagen.files[0]);
+                }
+
+            } else {
+
+                alert("This is not an allowed file type. \nOnly jpg / jpeg and png files are allowed!.");
+
+                $('#inputImage').val(null);
+
+                $("#imageView").attr("src", "../Image/personPhotoDefault.svg");
+            }
+
+        }
+
+    </script>
+}

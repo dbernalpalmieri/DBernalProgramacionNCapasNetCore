@@ -1,0 +1,113 @@
+﻿@model ML.Aseguradora
+@{
+    ViewData["Title"] = "GetAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/4.0.0/material-components-web.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.material.min.css" />
+
+<div class="container">
+    <h1>@ViewBag.Title</h1>
+
+    <div class="col-md-offset-2 col-md-10">
+        <button onclick="location.href = '@Url.Action("Form","Aseguradora")';" class="btn btn-primary">
+            <i class="bi bi-file-lock2"> Nuevo Aseguradora</i>
+        </button>
+    </div>
+    <div class="row mt-3">
+        <div class="col-sm-12">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>@ViewBag.Message</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive p-4">
+        <table class="table-striped" style="width:100%" id="table_aseguradora">
+            <thead>
+                <tr>
+                    @*<th>
+                    @Html.DisplayNameFor(model => model.IdEmpresa)
+                    </th>*@
+                    <th>
+                        @Html.DisplayNameFor(model => model.Nombre)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FechaCreacion)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FechaModificacion)
+                    </th>
+                    <th>
+                        Nombre Usuario
+                    </th>
+                    <th>
+                        Acciones
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (ML.Aseguradora aseguradora in Model.Aseguradoras)
+                {
+                    <tr>
+                        @*<td>
+                    @Html.DisplayFor(empresaItem => empresa.IdEmpresa)
+                    </td>*@
+                        <td>
+                            @Html.DisplayFor(aseguradoraItem => aseguradora.Nombre)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(aseguradoraItem => aseguradora.FechaCreacion)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(aseguradoraItem => aseguradora.FechaModificacion)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(aseguradoraItem => aseguradora.Usuario.NombreCompleto)
+                        </td>
+
+                        <td>
+                            <div class="d-flex">
+                                <button onclick="location.href = '@Url.Action("Form","Aseguradora", new { IdAseguradora = aseguradora.IdAseguradora })';"
+                                    class="btn btn-warning me-2" title="Editar">
+                                    <i class="bi bi-pen"></i>
+                                </button>
+                                <a class="btn btn-danger bi bi-trash-fill" href="@Url.Action("Delete", "Aseguradora", new {  IdAseguradora = aseguradora.IdAseguradora })"
+                               onclick="return confirm('¿Estas seguro que deseas eliminar este registro?');"></a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+   
+
+</div>
+@section Scripts{
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/dataTables.material.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#table_aseguradora').DataTable({
+                "lengthMenu": [[5, 10, 15, 20, -1], [5, 10, 15, 20, "All"]],
+                searching: true,
+                autoWidth: false,
+                columnDefs: [
+                    {
+                        targets: ['_all'],
+                        className: 'mdc-data-table__cell',
+                    },
+                ],
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json",
+                },
+
+            });
+        });
+    </script>
+
+}

@@ -1,0 +1,306 @@
+﻿@model ML.Usuario
+@{
+    ViewData["Title"] = "GetAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/4.0.0/material-components-web.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.material.min.css" />
+
+
+
+<div class="container">
+
+    <h1>@ViewBag.Title</h1>
+
+    <div class="d-flex row">
+        <div class="col-md-4">
+            <br />
+            <button onclick="location.href = '@Url.Action("Form", "Usuario")';" class="btn btn-success">
+                <i class="bi bi-person-plus-fill"> Nuevo Usuario</i>
+            </button>
+        </div>
+
+        <div class="col-md-8">
+            @using (Html.BeginForm("GetAll", "Usuario", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+
+                <div class="d-flex row justify-content-end">
+
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.Rol.IdRol, "Rol", htmlAttributes: new { @class = "control-label" })
+                        @Html.DropDownListFor(model => model.Rol.IdRol, new SelectList(Model.Rol.Roles, "IdRol", "Nombre"), "Selecciona un Rol", new { id = "idRol", @class = "form-select" })
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        @Html.LabelFor(model => model.ApellidoPaterno, "Apellido Paterno", htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.ApellidoPaterno, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    <div class="form-group col-md-1">
+                        <br />
+                        <button class="btn btn-primary">
+                            <i class="bi bi-search" type="submit"></i>
+                        </button>
+                    </div>
+
+                </div>
+            }
+        </div>
+    </div>
+
+
+
+    <div class="row mt-3" id="example">
+        <div class="col-sm-12">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>@ViewBag.Message</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive p-4">
+        <table class="table-striped" id="table_usuarios" style="width:100%">
+            <thead>
+                <tr>
+                    @*<th>
+                    @Html.DisplayNameFor(model => model.IdUsuario)
+                    </th>*@
+                    <th>
+                        @*@Html.DisplayNameFor(model => model.Nombre)*@
+                        Nombre Completo
+                    </th>
+                    @*<th>
+                    @Html.DisplayNameFor(model => model.ApellidoPaterno)
+                    </th>
+                    <th>
+                    @Html.DisplayNameFor(model => model.ApellidoMaterno)
+                    </th>*@
+                    <th>
+                        @Html.DisplayNameFor(model => model.Sexo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Email)
+                    </th>
+                    @*<th>
+                    @Html.DisplayNameFor(model => model.Password)
+                    </th>*@
+                    <th>
+                        @Html.DisplayNameFor(model => model.UserName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Telefono)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Celular)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Curp)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FechaNacimiento)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Rol.Nombre)
+                    </th>
+                    <th>
+                        Dirección
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Imagen)
+                    </th>
+                    @*<th>
+                    @Html.DisplayNameFor(model => model.Direccion.Colonia.CodigoPostal)
+                    </th>
+                    <th>
+                    @Html.DisplayNameFor(model => model.Direccion.Colonia.Nombre)
+                    </th>
+                    <th>
+                    @Html.DisplayNameFor(model => model.Direccion.Colonia.Municipio.Nombre)
+                    </th>
+                    <th>
+                    @Html.DisplayNameFor(model => model.Direccion.Colonia.Municipio.Estado.Nombre)
+                    </th>
+                    <th>
+                    @Html.DisplayNameFor(model => model.Direccion.Colonia.Municipio.Estado.Pais.Nombre)
+                    </th>*@
+                    @*<th>
+                    @Html.DisplayNameFor(model => model.Rol.IdRol)
+                    </th>*@
+                    <th> @Html.DisplayNameFor(model => model.Status)</th>
+
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @*var item Model*@
+                @foreach (ML.Usuario item in Model.Usuarios)
+                {
+                    <tr>
+                        @*<td>
+                    @Html.DisplayFor(modelItem => item.IdUsuario)
+                    </td>*@
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nombre) @Html.DisplayFor(modelItem => item.ApellidoPaterno) @Html.DisplayFor(modelItem => item.ApellidoMaterno)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Sexo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        @*<td>
+                    @Html.DisplayFor(modelItem => item.Password)
+                    </td>*@
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Telefono)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Celular)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Curp)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FechaNacimiento)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Rol.Nombre)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Direccion.Calle)
+                            #@Html.DisplayFor(modelItem => item.Direccion.NumeroExterior)
+
+                            - @Html.DisplayFor(modelItem => item.Direccion.Colonia.Municipio.Nombre)
+
+                            - @Html.DisplayFor(modelItem => item.Direccion.Colonia.Municipio.Estado.Nombre)
+
+                            - @Html.DisplayFor(modelItem => item.Direccion.Colonia.Municipio.Estado.Pais.Nombre)
+                        </td>
+                        <td>
+                            @if (item.Imagen == null)
+                            {
+                                <img src="~/image/personPhotoDefault.svg" class="rounded img-thumbnail" alt='Category Image' height='200px' width='200px'>
+                            }
+                            else
+                            {
+                                //var imagenBase64 = Convert.ToBase64String(item.Imagen);
+                                var imagenSRC = $"data:image;base64,{item.Imagen}";
+                                <img src='@imagenSRC' class="rounded img-thumbnail" alt='Category Image' height='200px' width='200px'>
+
+                            }
+                        </td>
+                        <td>
+                            @if (item.Status == true)
+                            {
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckStatus" checked onclick="changeStatus(this,@item.IdUsuario)">
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckStatus" onclick="changeStatus(this,@item.IdUsuario)">
+                                </div>
+                            }
+
+                        </td>
+                        @*<td class="visually-hidden">
+                    @Html.DisplayFor(modelItem => item.Rol.IdRol)
+                    </td>*@
+                        <td>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <button onclick="location.href = '@Url.Action("Form","Usuario", new { IdUsuario = item.IdUsuario })';"
+                                    class="btn btn-warning me-2" title="Editar">
+                                    <i class="bi bi-pen"></i>
+                                </button>
+                                @*<button onclick="location.href = '@Url.Action("GetById","Usuario", new { IdUsuario = item.IdUsuario })';"
+                            class="btn btn-success me-2" title="Ver Usuario">
+                            <i class="bi bi-person-badge-fill"></i>
+                            </button>*@
+                                <a class="btn btn-danger bi bi-trash-fill" href="@Url.Action("Delete", "Usuario", new { IdUsuario = item.IdUsuario })"
+                               onclick="return confirm('¿Estas seguro que deseas eliminar este registro?');"></a>
+                            </div>
+                            @*Html.ActionLink("Ver", "Detalle", new { IdUsuario = item.IdUsuario }, new { @class = "btn btn-success" })  |*@
+                            @*Html.ActionLink("Eliminar", "Delete", new { IdUsuario = item.IdUsuario }, new { @class = "btn btn-danger" }) *@
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+
+</div>
+@section Scripts{
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/dataTables.material.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#table_usuarios').DataTable({
+                "lengthMenu": [[5, 10, 15, 20, -1], [5, 10, 15, 20, "All"]],
+                searching: false,
+                autoWidth: false,
+                columnDefs: [
+                    {
+                        targets: ['_all'],
+                        className: 'mdc-data-table__cell',
+                    },
+                ],
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json",
+                },
+
+            });
+        });
+
+        function changeStatus(event, IdUsuario) {
+            var status = event.checked;
+
+            let confirmAction = confirm("Estas seguro de cambiar el status?");
+            if (confirmAction) {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("ChangeStatus")',
+                    dataType: 'json',
+                    data: { IdUsuario: IdUsuario },
+                    success:
+                        function (result) {
+                            if (result.correct) {
+                                alert(result.message)
+                            } else {
+                                alert(result.message)
+                                event.checked = !status;
+                            }
+                        },
+                    error: function (ex) {
+                        alert('Failed ' + ex);
+                    }
+                });
+            } else {
+                event.checked = !status;
+                alert("Acción cancelada.");
+            }
+        }
+    </script>
+
+}

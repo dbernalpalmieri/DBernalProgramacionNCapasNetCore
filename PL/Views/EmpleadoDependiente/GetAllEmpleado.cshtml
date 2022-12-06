@@ -1,0 +1,124 @@
+﻿@model ML.Empleado
+@{
+    ViewData["Title"] = "GetAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="container">
+    <h1>@ViewBag.Title</h1>
+
+
+    <div class="row mt-3" id="example">
+        <div class="col-sm-12">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>@ViewBag.Message</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive p-4">
+        <table class="table-striped" id="table_usuarios" style="width:100%">
+            <thead>
+                <tr>
+                    @*<th>
+                    @Html.DisplayNameFor(model => model.IdUsuario)
+                    </th>*@
+                    <th></th>
+                    <th>
+                        Nombre Completo
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Rfc)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Email)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Telefono)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FechaNacimiento)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Nss)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FechaIngreso)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Foto)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Empresa.Nombre)
+                    </th>
+
+                    
+                </tr>
+            </thead>
+
+            <tbody>
+                @*var item Model*@
+                @foreach (ML.Empleado item in Model.Empleados)
+                {
+                    <tr>
+                         <td>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <button onclick="location.href = '@Url.Action("GetAllDependienteById","EmpleadoDependiente", new { NumeroEmpleado = item.NumeroEmpleado })';"
+                                    class="btn btn-warning me-2" title="Ver dependientes">
+                                    <i class="bi bi-list-stars"></i>
+                                </button>
+                            </div>
+                        </td>
+                        @*<td>
+                    @Html.DisplayFor(modelItem => item.IdUsuario)
+                    </td>*@
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NombreCompleto)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Rfc)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Telefono)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FechaNacimiento)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nss)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FechaIngreso)
+                        </td>
+                        <td>
+                            @if (item.Foto == null)
+                            {
+                                <img src="~/image/personPhotoDefault.svg" class="rounded img-thumbnail" alt='Category Image' height='200px' width='200px'>
+                            }
+                            else
+                            {
+                                //var imagenBase64 = Convert.ToBase64String(item.Imagen);
+                                var imagenSRC = $"data:image;base64,{item.Foto}";
+                                <img src='@imagenSRC' class="rounded img-thumbnail" alt='Category Image' height='200px' width='200px'>
+
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Empresa.Nombre)
+                        </td>
+                       
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+
