@@ -1,11 +1,15 @@
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+
 
 //builder.Services.AddDbContext<DbernalProgramacionNcapasContext>(options =>
 //    options.UseSqlServer(builder.Configuration.GetConnectionString("DBernalProgramacionNCapas")));
@@ -38,9 +42,12 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
 }
-app.UseSession();
 
-app.UseStaticFiles();
+
+app.UseAuthentication(); // NOTE: line is newly added
+app.UseStaticFiles(); // NOTE: line is newly added
+
+app.UseSession();
 
 app.UseRouting();
 
@@ -48,6 +55,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Usuario}/{action=Login}/{id?}");
 
 app.Run();

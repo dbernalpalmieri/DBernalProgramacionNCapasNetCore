@@ -29,6 +29,84 @@ namespace PL.Controllers
         //}
 
         [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Login(string UserNameEmail, string password)
+        {
+            ML.Result result = new ML.Result();
+            try
+            {
+                using (HttpClient httpClient = new HttpClient())
+                {
+                    httpClient.DefaultRequestHeaders.Clear();
+                    httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                    string urlAPI = _configuration["UrlAPI"];
+                    httpClient.BaseAddress = new Uri(urlAPI);
+
+
+                    //Sending request to find web api REST service resource using HttpClient
+                    var request = httpClient.GetAsync($"Usuario/GetByUsernameEmail/{UserNameEmail}");
+                    request.Wait();
+
+                    //Checking the response is successful or not which is sent using HttpClient
+                    var response = request.Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var readContent = response.Content.ReadAsStringAsync().Result;
+
+                        ML.Result resultAPI = JsonConvert.DeserializeObject<ML.Result>(readContent);
+
+                        result.Message = resultAPI.Message;
+
+                        if (resultAPI.Correct)
+                        {
+                            ML.Usuario user = JsonConvert.DeserializeObject<ML.Usuario>(resultAPI.Object.ToString());
+                            result.Object = user;
+                            result.Correct = true;
+                        }
+                    }
+                }
+            }
+            catch (Exception error)
+            {
+                result.Correct = false;
+                result.Message = error.Message;
+            }
+
+
+            ViewBag.Message = result.Message;
+
+
+
+
+            //ML.Result result = BL.Usuario.GetByUsernameEmail(UserNameEmail);
+            if (result.Correct)
+            {
+                ML.Usuario usuario = (ML.Usuario) result.Object;
+                if (usuario.Password == password)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ViewBag.Message = "Contraseña incorrecta";
+                    return View("Login");
+                }
+            }
+            else
+            {
+                ViewBag.Message = result.Message;
+                return View("Login");
+            }
+        }
+
+
+        [HttpGet]
         public IActionResult GetAll()
         {
             //ML.Usuario user = new ML.Usuario();

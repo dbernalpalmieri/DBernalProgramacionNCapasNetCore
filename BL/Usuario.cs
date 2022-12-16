@@ -11,6 +11,7 @@ using System.Data.OleDb;
 using System.Data.SqlTypes;
 using System.Globalization;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -321,6 +322,61 @@ namespace BL
             return result;
         }
 
+        public static Result GetByUsernameEmail(string UsernameEmail)
+        {
+            Result result = new Result();
+            try
+            {
+                using (DbernalProgramacionNcapasContext context = new DbernalProgramacionNcapasContext())
+                {
+
+                    // Parámetros que nos regresa el procedimiento almacenado
+                    var Mensaje = new SqlParameter
+                    {
+                        ParameterName = "@Mensaje",
+                        DbType = DbType.String,
+                        Size = 100,
+                        Direction = ParameterDirection.Output
+                    };
+                    var Found = new SqlParameter
+                    {
+                        ParameterName = "@Found",
+                        DbType = DbType.Boolean,
+                        Direction = ParameterDirection.Output
+                    };
+
+                    var execute = context.Usuarios.FromSqlInterpolated($"UsuarioGetByUserNameEmail @UserNameEmail={UsernameEmail}, @Mensaje={Mensaje} OUT, @Found={Found} OUT").AsEnumerable().SingleOrDefault();
+
+                    
+
+                    // Recuperamos el valor del parámetro que nos devuelve la base de datos
+                    result.Message = $"{Convert.ToString(Mensaje.Value)}";
+                    result.Correct = Convert.ToBoolean(Found.Value);
+
+
+                    if (execute != null)
+                    {
+
+                        ML.Usuario usuario = new ML.Usuario();
+
+                        usuario.IdUsuario = execute.IdUsuario;
+                        usuario.Email = execute.Email;
+                        usuario.Password = execute.Password;
+                        usuario.UserName = execute.UserName;
+
+                        result.Object = usuario;
+                    } 
+                }
+            }
+            catch (Exception error)
+            {
+                result.Exeption = error;
+                result.Message = $"Ups ocurrió un error: {error.Message}";
+                result.Correct = false;
+            }
+            return result;
+        }
+
         public static ML.Result ConvertXSLXtoDataTable(string conexionString)
         {
             ML.Result result = new ML.Result();
@@ -517,6 +573,37 @@ namespace BL
 
 
             return result;
+        }
+
+
+
+
+
+        public static Result ValidarToken(ClaimsIdentity identity)
+        {
+            ML.Result result = new ML.Result();
+
+            try
+            {
+                if (identity.Claims.Count() == 0)
+                {
+                    result.Correct = false;
+                    result.Message = "Verificar si se envía un token valido";
+                    return result;
+                }
+
+                var IdUsuario = identity.Claims.FirstOrDefault(item => item.Type == "id").Value;
+                ML.Result resultUsuario = BL.Usuario.GetById(int.Parse(IdUsuario));
+                return resultUsuario;
+            }
+            catch (Exception error)
+            {
+
+                result.Correct = false;
+                result.Exeption = error;
+                result.Message = $"Error: {result.Exeption.Message}";
+                return result;
+            }
         }
     }
 }

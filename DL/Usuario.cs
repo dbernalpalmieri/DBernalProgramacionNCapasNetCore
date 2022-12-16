@@ -1,18 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DL;
 
 public partial class Usuario
 {
+    [NotMapped]
     public int IdUsuario { get; set; }
 
+    [NotMapped]
     public string Nombre { get; set; } = null!;
 
+    [NotMapped]
     public string ApellidoPaterno { get; set; } = null!;
-
+    
+    [NotMapped]
     public string ApellidoMaterno { get; set; } = null!;
 
+    [NotMapped]
     public string Sexo { get; set; } = null!;
 
     public DateTime FechaNacimiento { get; set; }

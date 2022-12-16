@@ -1,0 +1,147 @@
+﻿<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css"
+      @{
+      Layout = null;
+      }
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Iniciar Sesión</title>
+
+    <title>Login Page</title>
+    <!--Made with love by Mutiullah Samim -->
+    <!--Bootsrap 4 CDN-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <!--Fontawesome CDN-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+    <!--Custom styles-->
+    <link rel="stylesheet" type="text/css" href="~/css/login.css">
+</head>
+<body>
+    <div class="container">
+        <div class="d-flex justify-content-center h-100">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Iniciar Sesión</h3>
+                    <div class="d-flex justify-content-end social_icon">
+                        @*<span><i class="fab fa-facebook-square"></i></span>
+                        <span><i class="fab fa-google-plus-square"></i></span>
+                        <span><i class="fab fa-twitter-square"></i></span>*@
+                    </div>
+                </div>
+                <div class="card-body">
+                    @*<form action="myController/myAction" method="POST">*@
+                    @using (Html.BeginForm("Login", "Usuario", FormMethod.Post, new { enctype = "multipart/form-data", id = "basic-form" }))
+                    {
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                <input type="text" class="form-control" name="UserNameEmail" placeholder="User-name o Email">
+                            </div>
+                            <div id="alert_UserNameEmail" class="text-danger"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                <input type="password" class="form-control" name="Password" placeholder="Contraseña">
+                            </div>
+                            <div id="alert_Password" class="text-danger"></div>
+                        </div>
+                        @*<div class="row align-items-center remember">
+                    <input type="checkbox">Remember Me
+                    </div>*@
+                        <div class="form-group">
+                            <button class="btn float-right login_btn" id="saveInfo">
+                                <i class="" type="submit"> Guardar</i>
+                            </button>
+                        </div>
+                    }
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-center links">
+                        Don't have an account?<a href="@Url.Action("Form", "Usuario")">Registrarse</a>
+                    </div>
+                    @*
+                    <div class="d-flex justify-content-center">
+                    <a href="#">Forgot your password?</a>
+                    </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    $('#saveInfo').click(function () {
+        var form = document.forms;
+        $(form).validate({
+            rules: {
+                Password: {
+                    required: true
+                },
+                UserNameEmail: {
+                    required: true
+                }
+            },
+            messages: {
+                Password: {
+                    required: "Ingresa tu contraseña"
+
+                },
+                UserNameEmail: {
+                    required: "Ingresa tu Email o UserName"
+                },
+                
+
+            },
+            errorClass: 'text-danger',
+            errorPlacement: function (error, element) {
+                switch (element.attr("name")) {
+                    case 'Password':
+                        error.insertAfter($("#alert_UserNameEmail"));
+                        break;
+                    case 'UserNameEmail':
+                        error.insertAfter($("#alert_Password"));
+                        break;
+                    default:
+                        error.insertAfter(element);
+                }
+            }
+        });
+
+    });
+
+
+
+
+    $("[name='Password']").on('blur', function () {
+        var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@@$!%*?&])[A-Za-z\d@@$!%*?&]{8,}$/;
+        if (regex.test(this.value)) {
+            $('#alert_Password').html('');
+        }
+        else {
+            $('#alert_Password').html('Contraseña Invalida (Mínimo ocho caracteres, al menos una letra mayúscula, una letra minúscula, un número y un carácter especial)');
+        }
+    });
+    $("[name='UserNameEmail']").on('blur', function () {
+        var regex = /^[a-zA-Z0-9._]+[a-zA-Z0-9]+@@[a-zA-Z0-9]+\.[a-zA-Z]{2,4}$/;;
+        if (regex.test(this.value)) {
+            $('#alert_UserNameEmail').html('');
+        }
+        else {
+            $('#alert_UserNameEmail').html('El correo es inválido');
+        }
+    });
+
+</script>
+
+
